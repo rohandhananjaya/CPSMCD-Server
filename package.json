@@ -1,0 +1,21 @@
+{
+  "name": "cpsmcd-ser",
+  "version": "1.0.0",
+  "description": "Backend of Crop Planning System for Managing Cultivation with Demand",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "server": "nodemon index.js"
+  },
+  "author": "K.R.D. Amarasooriya",
+  "license": "ISC",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.21"
+  }
+}
