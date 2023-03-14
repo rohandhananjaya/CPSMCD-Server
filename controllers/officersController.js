@@ -1,46 +1,48 @@
+const asyncHandler = require('express-error-handler')
+
 // @desc Get Officers
 // @route GET /api/officers
 // @access Private
-const getOfficers = (req, res) =>{
+const getOfficers = asyncHandler(async (req, res) =>{
     res.status(200).send(
         {
             message : "All Officers"
         }
     )
-}
+})
 
 // @desc Add Officers
 // @route POST /api/officers
 // @access Private
-const addOfficer = (req, res) =>{
+const addOfficer = asyncHandler(async (req, res) =>{
     res.status(200).send(
         {
             message : "Add Officer"
         }
     )
-}
+})
 
 // @desc Update Officers
 // @route PUT /api/officers
 // @access Private
-const updateOfficer = (req, res) =>{
+const updateOfficer = asyncHandler(async (req, res) =>{
     res.status(200).send(
         {
             message : `Update Officer : ${req.params.id}`
         }
     )
-}
+})
 
 // @desc Delete Officers
 // @route DELETE /api/officers
 // @access Private
-const deleteOfficer = (req, res) =>{
+const deleteOfficer = asyncHandler(async (req, res) =>{
     res.status(200).send(
         {
             message : `Delete Officer : ${req.params.id}`
         }
     )
-}
+})
 
 module.exports = {
     getOfficers,
