@@ -4,7 +4,7 @@
 const getFarmers = (req,res) =>{
     res.status(200).send(
         {
-            message : 'Get farmers'
+            message : 'All farmers'
         }
     )
 }

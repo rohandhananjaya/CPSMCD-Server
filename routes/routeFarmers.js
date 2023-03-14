@@ -9,7 +9,6 @@ const {
 } = require('../controllers/farmersController')
 
 router.route('/').get(getFarmers).post(addFarmer)
-
 router.route('/:id').put(updateFarmer).delete(deleteFarmer)
 
 module.exports = router
