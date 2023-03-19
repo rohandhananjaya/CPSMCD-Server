@@ -1,12 +1,12 @@
 const asyncHandler = require('express-async-handler')
 
-const Farmer = require('../models/farmersModel')
+const Farmers = require('../models/farmersModel')
 
 // @desc Get farmers
 // @route GET /api/farmers
 // @access Private
 const getFarmers = asyncHandler(async (req, res) => {
-    const farmers = await Farmer.find()
+    const farmers = await Farmers.find()
     res.status(200).json(farmers)
 })
 
@@ -18,7 +18,7 @@ const addFarmer = asyncHandler(async (req, res) => {
         //res.status(400)
         throw new Error('Required data missing!')
     } else {
-        const farmer = await Farmer.create({
+        const farmer = await Farmers.create({
             fname: req.body.fname,
             age: req.body.age,
             address_1: req.body.address_1,
