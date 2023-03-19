@@ -1,5 +1,4 @@
-const { default: mongoose } = require('mongoose')
-const mpngoose =  require('mongoose')
+const mongoose =  require('mongoose')
 const connectDB = async () =>{
     try{
         const conn = mongoose.connect(process.env.MONGO_URI)
