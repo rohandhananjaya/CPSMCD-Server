@@ -15,7 +15,7 @@ const getFarmers = asyncHandler(async (req, res) => {
 // @access Private
 const addFarmer = asyncHandler(async (req, res) => {
     if (!req.body.fname || !req.body.age || !req.body.address_1 || !req.body.address_2 || !req.body.address_3) {
-        //res.status(400)
+        //res.status(400) 
         throw new Error('Required data missing!')
     } else {
         const farmer = await Farmers.create({
@@ -34,22 +34,32 @@ const addFarmer = asyncHandler(async (req, res) => {
 // @route PUT /api/farmers/:id
 // @access Private
 const updateFarmer = asyncHandler(async (req, res) => {
-    res.status(200).send(
-        {
-            message: `Update farmer id : ${req.params.id}`
-        }
-    )
+    const farmer = Farmers.findById(req.params.id)
+
+    if (!farmer) {
+        res.status(400)
+        throw new Error('Farmer not found')
+    } else {
+        const updateFarmer = await Farmers.findByIdAndUpdate(req.params.id, req.body, { new: true })
+        res.status(200).send(updateFarmer)
+    }
+
+
 })
 
 // @desc Delete farmer
 // @route DELETE /api/farmers/:id
 // @access Private
 const deleteFarmer = asyncHandler(async (req, res) => {
-    res.status(200).send(
-        {
-            message: `Delete farmer id : ${req.params.id}`
-        }
-    )
+    const farmer = Farmers.findById(req.params.id)
+
+    if (!farmer) {
+        res.status(400)
+        throw new Error('Farmer not found')
+    } else {
+        const deleteFarmer = await Farmers.findByIdAndDelete(req.params.id)
+        res.status(200).send(deleteFarmer)
+    }
 })
 
 module.exports = {

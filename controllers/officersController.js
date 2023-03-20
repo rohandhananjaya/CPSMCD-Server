@@ -28,22 +28,31 @@ const addOfficer = asyncHandler(async (req, res) => {
 // @route PUT /api/officers
 // @access Private
 const updateOfficer = asyncHandler(async (req, res) => {
-    res.status(200).send(
-        {
-            message: `Update Officer : ${req.params.id}`
-        }
-    )
+    const officer = Officers.findById(req.params.id)
+
+    if (!officer) {
+        res.status(400)
+        throw new Error('Officer not found')
+    } else {
+        const updateOfficer = await Officers.findByIdAndUpdate(req.params.id, req.body, { new: true })
+        res.status(200).send(updateOfficer)
+    }
 })
 
 // @desc Delete Officers
 // @route DELETE /api/officers
 // @access Private
 const deleteOfficer = asyncHandler(async (req, res) => {
-    res.status(200).send(
-        {
-            message: `Delete Officer : ${req.params.id}`
-        }
-    )
+    const officer = Officers.findById(req.params.id)
+
+    if (!officer) {
+        res.status(400)
+        throw new Error('Officer not found')
+    } else {
+        const deleteofficer = await officer.findOneAndDelete(req.params.id)
+        res.status(200).send(deleteofficer)
+    }
+
 })
 
 module.exports = {
