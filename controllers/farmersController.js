@@ -34,16 +34,13 @@ const addFarmer = asyncHandler(async (req, res) => {
 // @route PUT /api/farmers/:id
 // @access Private
 const updateFarmer = asyncHandler(async (req, res) => {
-    const farmer = Farmers.findById(req.params.id)
 
-    if (!farmer) {
+    const updateFarmer = await Farmers.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    if (!updateFarmer) {
         res.status(400)
         throw new Error('Farmer not found')
-    } else {
-        const updateFarmer = await Farmers.findByIdAndUpdate(req.params.id, req.body, { new: true })
-        res.status(200).send(updateFarmer)
     }
-
+    res.status(200).send(updateFarmer)
 
 })
 
@@ -51,15 +48,14 @@ const updateFarmer = asyncHandler(async (req, res) => {
 // @route DELETE /api/farmers/:id
 // @access Private
 const deleteFarmer = asyncHandler(async (req, res) => {
-    const farmer = Farmers.findById(req.params.id)
 
-    if (!farmer) {
+    const deleteFarmer = await Farmers.findByIdAndDelete(req.params.id)
+    if (!deleteFarmer) {
         res.status(400)
-        throw new Error('Farmer not found')
-    } else {
-        const deleteFarmer = await Farmers.findByIdAndDelete(req.params.id)
-        res.status(200).send(deleteFarmer)
+        throw new Error("Farmer not found")
     }
+    res.status(200).send(deleteFarmer)
+
 })
 
 module.exports = {

@@ -28,30 +28,27 @@ const addOfficer = asyncHandler(async (req, res) => {
 // @route PUT /api/officers
 // @access Private
 const updateOfficer = asyncHandler(async (req, res) => {
-    const officer = Officers.findById(req.params.id)
 
-    if (!officer) {
+    const updateOfficer = await Officers.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    if (!updateOfficer) {
         res.status(400)
-        throw new Error('Officer not found')
-    } else {
-        const updateOfficer = await Officers.findByIdAndUpdate(req.params.id, req.body, { new: true })
-        res.status(200).send(updateOfficer)
+        throw new Error("Officer not found")
     }
+    res.status(200).send(updateOfficer)
+
 })
 
 // @desc Delete Officers
 // @route DELETE /api/officers
 // @access Private
 const deleteOfficer = asyncHandler(async (req, res) => {
-    const officer = Officers.findById(req.params.id)
 
-    if (!officer) {
+    const deleteOfficer = await Officers.findOneAndDelete(req.params.id)
+    if (!deleteOfficer) {
         res.status(400)
-        throw new Error('Officer not found')
-    } else {
-        const deleteofficer = await officer.findOneAndDelete(req.params.id)
-        res.status(200).send(deleteofficer)
+        throw new Error("Officer not found")
     }
+    res.status(200).send(deleteOfficer)
 
 })
 
