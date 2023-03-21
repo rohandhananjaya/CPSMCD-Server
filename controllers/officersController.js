@@ -3,6 +3,7 @@ const jsonwebtoken = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 
 const Officers = require('../models/officersModel')
+const generateToken = require('./jwtTokenController')
 
 // @desc Get Officers
 // @route GET /api/officers
@@ -35,7 +36,12 @@ const addOfficer = asyncHandler(async (req, res) => {
                 pass: hashedPass,
                 area: req.body.area
             })
-            res.status(201).send(officer)
+            res.status(201).send({
+                _id: officer.id,
+                name: officer.name,
+                email: officer.email,
+                token: generateToken(officer._id)
+            })
         }
     }
 })
@@ -83,14 +89,18 @@ const deleteOfficer = asyncHandler(async (req, res) => {
 // @route DELETE /api/officers/login
 // @access Public
 const loginOfficer = asyncHandler(async (req, res) => {
-    const {email,pass} = req.body
+    const { email, pass } = req.body
 
-    const user = await Officers.findOne({email})
+    const user = await Officers.findOne({ email })
 
-    if(user && (await bcrypt.compare(pass,user.pass))){
+    if (user && (await bcrypt.compare(pass, user.pass))) {
         res.status(200)
-        res.send(user)
-    }else{
+        res.json({
+            _id: user.id,
+            name: user.name,
+            token: generateToken(user._id)
+        })
+    } else {
         res.status(400)
         throw new Error("Invalid credentials")
     }
