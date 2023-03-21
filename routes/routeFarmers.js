@@ -5,9 +5,11 @@ const {
     getFarmers, 
     addFarmer, 
     updateFarmer, 
-    deleteFarmer
+    deleteFarmer,
+    loginFarmer
 } = require('../controllers/farmersController')
 
+router.route('/login').post(loginFarmer)
 router.route('/').get(getFarmers).post(addFarmer)
 router.route('/:id').put(updateFarmer).delete(deleteFarmer)
 
