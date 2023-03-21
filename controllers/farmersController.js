@@ -1,4 +1,6 @@
 const asyncHandler = require('express-async-handler')
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
 
 const Farmers = require('../models/farmersModel')
 
@@ -10,23 +12,39 @@ const getFarmers = asyncHandler(async (req, res) => {
     res.status(200).json(farmers)
 })
 
+
 // @desc Add farmers
 // @route POST /api/farmers
 // @access Private
 const addFarmer = asyncHandler(async (req, res) => {
-    if (!req.body.fname || !req.body.age || !req.body.address_1 || !req.body.address_2 || !req.body.address_3) {
+    if (!req.body.name || !req.body.email || !req.body.pass || !req.body.age || !req.body.area) {
         //res.status(400) 
         throw new Error('Required data missing!')
     } else {
-        const farmer = await Farmers.create({
-            fname: req.body.fname,
-            age: req.body.age,
-            address_1: req.body.address_1,
-            address_2: req.body.address_2,
-            address_3: req.body.address_3,
 
-        })
-        res.status(200).send(farmer)
+        const email = req.body.email
+        const userExists = await Farmers.findOne({ email })
+
+        if (userExists) {
+            res.status(400)
+            throw new Error('Farmer already exsists')
+        } else {
+            //Password Hashing
+            const salt = await bcrypt.genSalt(10)
+            const hashedPass = await bcrypt.hash(req.body.pass, salt)
+
+            const farmer = await Farmers.create({
+                name: req.body.name,
+                email: req.body.email,
+                pass: hashedPass,
+                age: req.body.age,
+                address_1: req.body.address_1,
+                address_2: req.body.address_2,
+                address_3: req.body.address_3,
+                area: req.body.area
+            })
+            res.status(201).send(farmer)
+        }
     }
 })
 
@@ -34,8 +52,21 @@ const addFarmer = asyncHandler(async (req, res) => {
 // @route PUT /api/farmers/:id
 // @access Private
 const updateFarmer = asyncHandler(async (req, res) => {
+    //Password Hashing
+    const salt = await bcrypt.genSalt(10)
+    const hashedPass = await bcrypt.hash(req.body.pass, salt)
 
-    const updateFarmer = await Farmers.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    const updateFarmer = await Farmers.findByIdAndUpdate(req.params.id, {
+        name: req.body.name,
+        pass: hashedPass,
+        age: req.body.age,
+        address_1: req.body.address_1,
+        address_2: req.body.address_2,
+        address_3: req.body.address_3,
+        area: req.body.area
+    }, {
+        new: true
+    })
     if (!updateFarmer) {
         res.status(400)
         throw new Error('Farmer not found')
@@ -49,7 +80,7 @@ const updateFarmer = asyncHandler(async (req, res) => {
 // @access Private
 const deleteFarmer = asyncHandler(async (req, res) => {
 
-    const deleteFarmer = await Farmers.findByIdAndDelete(req.params.id)
+    const deleteFarmer = await Farmers.findByIdAndRemove(req.params.id)
     if (!deleteFarmer) {
         res.status(400)
         throw new Error("Farmer not found")
@@ -58,9 +89,17 @@ const deleteFarmer = asyncHandler(async (req, res) => {
 
 })
 
+const loginFarmer = asyncHandler(async (req, res) => {
+    res.status(200).json({
+        message: 'Farmer Login'
+    })
+})
+
+
 module.exports = {
     getFarmers,
     addFarmer,
     updateFarmer,
-    deleteFarmer
+    deleteFarmer,
+    loginFarmer
 }

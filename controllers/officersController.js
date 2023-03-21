@@ -1,4 +1,7 @@
 const asyncHandler = require('express-async-handler')
+const jsonwebtoken = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
+
 const Officers = require('../models/officersModel')
 
 // @desc Get Officers
@@ -13,14 +16,27 @@ const getOfficers = asyncHandler(async (req, res) => {
 // @route POST /api/officers
 // @access Private
 const addOfficer = asyncHandler(async (req, res) => {
-    if (!req.body.fname) {
+    if (!req.body.name || !req.body.email || !req.body.pass || !req.body.area) {
         throw new Error('Required data missing')
     } else {
-        const officer = await Officers.create({
-            fname: req.body.fname,
-            lname: req.body.lname
-        })
-        res.status(200).send(officer)
+        const email = req.body.email
+        const officerExsists = await Officers.findOne({ email })
+        if (officerExsists) {
+            res.status(400)
+            throw new Error('Officer already exsists')
+        } else {
+            //Password Hashing
+            const salt = await bcrypt.genSalt(10)
+            const hashedPass = await bcrypt.hash(req.body.pass, salt)
+
+            const officer = await Officers.create({
+                name: req.body.name,
+                email: req.body.email,
+                pass: hashedPass,
+                area: req.body.area
+            })
+            res.status(201).send(officer)
+        }
     }
 })
 
@@ -28,8 +44,19 @@ const addOfficer = asyncHandler(async (req, res) => {
 // @route PUT /api/officers
 // @access Private
 const updateOfficer = asyncHandler(async (req, res) => {
-
-    const updateOfficer = await Officers.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    //Password Hashing
+    const salt = await bcrypt.genSalt(10)
+    const hashedPass = await bcrypt.hash(req.body.pass, salt)
+    
+    const updateOfficer = await Officers.findByIdAndUpdate(req.params.id,
+        {
+            name: req.body.name,
+            pass: hashedPass,
+            area: req.body.area
+        },
+        {
+            new: true
+        })
     if (!updateOfficer) {
         res.status(400)
         throw new Error("Officer not found")
@@ -43,7 +70,7 @@ const updateOfficer = asyncHandler(async (req, res) => {
 // @access Private
 const deleteOfficer = asyncHandler(async (req, res) => {
 
-    const deleteOfficer = await Officers.findOneAndDelete(req.params.id)
+    const deleteOfficer = await Officers.findByIdAndRemove(req.params.id)
     if (!deleteOfficer) {
         res.status(400)
         throw new Error("Officer not found")
@@ -52,9 +79,19 @@ const deleteOfficer = asyncHandler(async (req, res) => {
 
 })
 
+// @desc Login Officers
+// @route DELETE /api/officers/login
+// @access Public
+const loginOfficer = asyncHandler(async (req, res) => {
+    res.status(200).json({
+        message: 'Login Works'
+    })
+})
+
 module.exports = {
     getOfficers,
     addOfficer,
     updateOfficer,
-    deleteOfficer
+    deleteOfficer,
+    loginOfficer
 }

@@ -1,7 +1,16 @@
 const mongoose = require('mongoose');
 
 const farmerSchema = mongoose.Schema({
-  fname: {
+  name: {
+    type: String,
+    required: [true, 'First name is missing']
+  },
+  email: {
+    type: String,
+    required: [true, 'Email is missing'],
+    unique:true
+  },
+  pass: {
     type: String,
     required: [true, 'First name is missing']
   },
@@ -20,6 +29,10 @@ const farmerSchema = mongoose.Schema({
   address_3:{
     type:String,
     required:false
+  },
+  area:{
+    type:Number,
+    required:[true,'Area is missing']
   }
 }, {
   timestamps: true
