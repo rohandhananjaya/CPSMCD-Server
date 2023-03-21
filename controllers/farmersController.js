@@ -56,15 +56,16 @@ const updateFarmer = asyncHandler(async (req, res) => {
     const salt = await bcrypt.genSalt(10)
     const hashedPass = await bcrypt.hash(req.body.pass, salt)
 
-    const updateFarmer = await Farmers.findByIdAndUpdate(req.params.id, {
-        name: req.body.name,
-        pass: hashedPass,
-        age: req.body.age,
-        address_1: req.body.address_1,
-        address_2: req.body.address_2,
-        address_3: req.body.address_3,
-        area: req.body.area
-    }, {
+    const updateFarmer = await Farmers.findByIdAndUpdate(req.params.id,
+        {
+            name: req.body.name,
+            pass: hashedPass,
+            age: req.body.age,
+            address_1: req.body.address_1,
+            address_2: req.body.address_2,
+            address_3: req.body.address_3,
+            area: req.body.area
+        }, {
         new: true
     })
     if (!updateFarmer) {
@@ -90,9 +91,18 @@ const deleteFarmer = asyncHandler(async (req, res) => {
 })
 
 const loginFarmer = asyncHandler(async (req, res) => {
-    res.status(200).json({
-        message: 'Farmer Login'
-    })
+
+    const { email, pass } = req.body
+
+    const user = await Farmers.findOne({ email })
+
+    if (user && (await bcrypt.compare(pass, user.pass))) {
+        res.status(200)
+        res.json(user)
+    } else {
+        res.status(400)
+        throw new Error("Invalid credentials")
+    }
 })
 
 

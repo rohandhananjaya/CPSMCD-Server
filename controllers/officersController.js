@@ -47,7 +47,7 @@ const updateOfficer = asyncHandler(async (req, res) => {
     //Password Hashing
     const salt = await bcrypt.genSalt(10)
     const hashedPass = await bcrypt.hash(req.body.pass, salt)
-    
+
     const updateOfficer = await Officers.findByIdAndUpdate(req.params.id,
         {
             name: req.body.name,
@@ -83,9 +83,17 @@ const deleteOfficer = asyncHandler(async (req, res) => {
 // @route DELETE /api/officers/login
 // @access Public
 const loginOfficer = asyncHandler(async (req, res) => {
-    res.status(200).json({
-        message: 'Login Works'
-    })
+    const {email,pass} = req.body
+
+    const user = await Officers.findOne({email})
+
+    if(user && (await bcrypt.compare(pass,user.pass))){
+        res.status(200)
+        res.send(user)
+    }else{
+        res.status(400)
+        throw new Error("Invalid credentials")
+    }
 })
 
 module.exports = {
