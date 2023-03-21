@@ -1,8 +1,8 @@
 const asyncHandler = require('express-async-handler')
-const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 
 const Farmers = require('../models/farmersModel')
+const generateToken = require('./jwtTokenController')
 
 // @desc Get farmers
 // @route GET /api/farmers
@@ -43,7 +43,12 @@ const addFarmer = asyncHandler(async (req, res) => {
                 address_3: req.body.address_3,
                 area: req.body.area
             })
-            res.status(201).send(farmer)
+            res.status(201).send({
+                _id: farmer.id,
+                name: farmer.name,
+                email: farmer.email,
+                token: generateToken(farmer._id)
+            })
         }
     }
 })
@@ -98,7 +103,11 @@ const loginFarmer = asyncHandler(async (req, res) => {
 
     if (user && (await bcrypt.compare(pass, user.pass))) {
         res.status(200)
-        res.json(user)
+        res.json({
+            _id:user.id,
+            name:user.name,
+            token: generateToken(user._id)
+        })
     } else {
         res.status(400)
         throw new Error("Invalid credentials")
