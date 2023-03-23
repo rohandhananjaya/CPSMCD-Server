@@ -8,10 +8,10 @@ const {
     deleteOfficer,
     loginOfficer
 } = require("../controllers/officersController")
+const { protect } = require('../middleware/authMiddleware')
 
 router.route('/login').post(loginOfficer)
-router.route('/').get(getOfficers).post(addOfficer)
-router.route('/:id').put(updateOfficer).delete(deleteOfficer)
-
+router.route('/').get(protect, getOfficers).post(protect, addOfficer)
+router.route('/:id').put(protect, updateOfficer).delete(protect, deleteOfficer)
 
 module.exports = router
