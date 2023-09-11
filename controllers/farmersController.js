@@ -106,6 +106,7 @@ const loginFarmer = asyncHandler(async (req, res) => {
         res.json({
             _id:user.id,
             name:user.name,
+            email:user.email,
             token: generateToken(user._id)
         })
     } else {

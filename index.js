@@ -18,5 +18,8 @@ app.use(express.urlencoded(
 
 app.use('/api/farmers', require('./routes/routeFarmers'))
 app.use('/api/officers',require('./routes/routerOfficer'))
+
+app.use('/api/users',require('./routes/routeSysUsers'))
+app.use('/api/crops',require('./routes/routeCrops'))
 app.use(errorHandler)
 app.listen(port, () => console.log(`CPSMCD Server started on port : ${port}`))
