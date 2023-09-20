@@ -125,8 +125,13 @@ const loginUser = asyncHandler(async (req, res) => {
     if (user && (await bcrypt.compare(pass, user.pass))) {
       res.status(200).json({
         _id: user._id,
-        name: user.name,
         token: generateToken(user._id),
+        name: user.name,
+        email : user.email,
+        area : user.area,
+        type : user.type,
+        age : user.age,
+        address : user.address,
       });
     } else {
       res.status(401); // Use 401 for unauthorized

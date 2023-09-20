@@ -8,30 +8,30 @@ const userSchema = mongoose.Schema({
     email: {
         type: String,
         required: [true, 'Email is missing'],
-        unique:true
+        unique: true
     },
     pass: {
         type: String,
         required: [true, 'First name is missing']
     },
-    age:{
-        type:Number,
-        required:[true,'Age is missing']
+    age: {
+        type: Number,
+        required: [true, 'Age is missing']
     },
-    address:{
-        type:String,
-        required:false
+    address: {
+        type: String,
+        required: false
     },
-    area:{
-        type:String,
-        required:[true,'Area is missing']
+    area: {
+        type: String,
+        required: [true, 'Area is missing']
     },
-    type:{
-        type:String,
-        required:[true,'Type is missing']
+    type: {
+        type: String,
+        required: [true, 'Type is missing']
     },
-    }, {
-        timestamps: true
-      });
-    
-    module.exports = mongoose.model('User', userSchema)
+}, {
+    timestamps: true
+});
+
+module.exports = mongoose.model('User', userSchema)
