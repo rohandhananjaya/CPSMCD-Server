@@ -16,9 +16,11 @@ const cropSchema = new mongoose.Schema({
   statistics: [{
     year: Number,
     month: Number,
-    quantity: Number, // Or any other statistics you need
+    quantity: Number,
+    min_price: Number,
+    max_price: Number,
   }],
-  //Need to add status of crop (Growing, Harvested, etc.)
+
 });
 
 const Crop = mongoose.model('Crop', cropSchema);
