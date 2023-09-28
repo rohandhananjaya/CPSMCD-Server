@@ -30,6 +30,14 @@ const userSchema = mongoose.Schema({
         type: String,
         required: [true, 'Type is missing']
     },
+    cultivation: [{
+        name: String,
+        quantity: Number,
+        cost: Number,
+        status: String,
+        target_date: String,
+        bid_price: Number,
+    }],
 }, {
     timestamps: true
 });

@@ -12,6 +12,19 @@ const getUsers = asyncHandler(async (req, res) => {
   res.status(200).json(users);
 });
 
+// @desc Get a user
+// @route GET /api/users/:id
+// @access Private (assuming authentication middleware is used)
+const getUser = asyncHandler(async (req, res) => {
+  const userId = req.params.id;
+  const user = await User.findById(userId);
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+  res.status(200).json(user);
+});
+
 // @desc Add a user
 // @route POST /api/users
 // @access Public
@@ -53,45 +66,33 @@ const addUser = asyncHandler(async (req, res) => {
 // @access Private (assuming authentication middleware is used)
 
 const updateUser = asyncHandler(async (req, res) => {
-  const { name, email, pass, age, area } = req.body;
+  const { name, email, pass, age,address, area, type, cultivation } = req.body;
   const userId = req.params.id;
+  const updateFields = {};
 
-  const user = await User.findById(userId);
+  if (name) updateFields.name = name;
+  if (email) updateFields.email = email;
+  if (pass) {
+    const salt = await bcrypt.genSalt(10);
+    updateFields.pass = await bcrypt.hash(pass, salt);
+  }
+  if (age)updateFields.age = age;
+  if (address)updateFields.address = address;
+  if (area)updateFields.area = area;
+  if (type)updateFields.type = type;
+  if (cultivation)updateFields.cultivation = cultivation;
 
-  if (!user) {
-    res.status(404);
+  const updateUser = await User.findByIdAndUpdate(
+    userId,
+    updateFields,
+    { new: true }
+  );
+
+  if (!updateUser) {
+    res.status(400);
     throw new Error('User not found');
   }
 
-  // If you want to update specific fields only when provided in the request,
-  // you can check for each field and update accordingly.
-  if (name) {
-    user.name = name;
-  }
-  if (email) {
-    user.email = email;
-  }
-  if (pass) {
-    const salt = await bcrypt.genSalt(10);
-    user.pass = await bcrypt.hash(pass, salt);
-  }
-  if (age) {
-    user.age = age;
-  }
-  if (area) {
-    user.area = area;
-  }
-
-  const updatedUser = await user.save();
-
-  res.status(200).json({
-    _id: updatedUser._id,
-    name: updatedUser.name,
-    email: updatedUser.email,
-    age: updatedUser.age,
-    area: updatedUser.area,
-    token: generateToken(updatedUser._id),
-  });
 });
 
 // @desc Delete a user
@@ -141,6 +142,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
 module.exports = {
   getUsers,
+  getUser,
   addUser,
   updateUser,
   deleteUser,

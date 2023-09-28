@@ -11,7 +11,7 @@ const cropSchema = new mongoose.Schema({
   },
   timeToGrow: {
     type: Number,
-    required: false, 
+    required: false,
   },
   statistics: [{
     year: Number,
@@ -19,6 +19,7 @@ const cropSchema = new mongoose.Schema({
     quantity: Number,
     min_price: Number,
     max_price: Number,
+    cropstatus: String,
   }],
 
 });
