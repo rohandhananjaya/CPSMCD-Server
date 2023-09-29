@@ -66,7 +66,7 @@ const addUser = asyncHandler(async (req, res) => {
 // @access Private (assuming authentication middleware is used)
 
 const updateUser = asyncHandler(async (req, res) => {
-  const { name, email, pass, age,address, area, type, cultivation,profile_pic } = req.body;
+  const { name, email, pass, age,address, area, type, cultivation,profilepic } = req.body;
   const userId = req.params.id;
   const updateFields = {};
 
@@ -81,7 +81,7 @@ const updateUser = asyncHandler(async (req, res) => {
   if (area)updateFields.area = area;
   if (type)updateFields.type = type;
   if (cultivation)updateFields.cultivation = cultivation;
-  if (profile_pic)updateFields.profile_pic = profile_pic;
+  if (profilepic)updateFields.profilepic = profilepic;
 
   const updateUser = await User.findByIdAndUpdate(
     userId,

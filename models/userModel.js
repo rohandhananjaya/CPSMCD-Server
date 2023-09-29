@@ -38,7 +38,7 @@ const userSchema = mongoose.Schema({
         target_date: String,
         bid_price: Number,
     }],
-    profile_pic: {
+    profilepic: {
         type: String,
         required: false
     }
