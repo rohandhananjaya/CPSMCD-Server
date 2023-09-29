@@ -137,6 +137,7 @@ const loginUser = asyncHandler(async (req, res) => {
         type : user.type,
         age : user.age,
         address : user.address,
+        profile_pic : user.profilepic,
       });
     } else {
       res.status(401); // Use 401 for unauthorized
