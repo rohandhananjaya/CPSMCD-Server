@@ -92,7 +92,10 @@ const updateUser = asyncHandler(async (req, res) => {
   if (!updateUser) {
     res.status(400);
     throw new Error('User not found');
+  }else{
+    res.status(200).json(updateUser);
   }
+
 
 });
 
