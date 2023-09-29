@@ -38,6 +38,10 @@ const userSchema = mongoose.Schema({
         target_date: String,
         bid_price: Number,
     }],
+    profile_pic: {
+        type: String,
+        required: false
+    }
 }, {
     timestamps: true
 });
